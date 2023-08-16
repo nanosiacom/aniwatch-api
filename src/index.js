@@ -1,11 +1,11 @@
 import cors from 'cors';
 import express from 'express';
 import axios from 'axios';
-import {getArchiveItems, getItem, slugify} from "./src/utils.js";
+import {getArchiveItems, getItem, slugify} from "./utils.js";
 import cheerio from "cheerio";
 
 const ax = axios.create({
-    baseURL: 'https://aniwatch.to'
+    baseURL: 'https://aniwatch.to',
 })
 const port = process.env.PORT || 3000;
 const corsOptions = {
@@ -22,6 +22,67 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
     res.status(200).json('WORKING');
+})
+
+app.get('/home', async (req, res) => {
+    try {
+        const html = await ax.get(`/home`);
+        const $ = cheerio.load(html.data);
+        const data = {
+            trending: [],
+            spotlight: [],
+            top10: [],
+            latest: []
+        };
+
+        $('#trending-home .swiper-slide').each((i, el) => {
+            data['trending'].push({
+                id: $(el).attr('data-id'),
+                slug: $(el).find('a').attr('href').split('/').pop(),
+                title: $(el).find('.film-title').text(),
+                original_title: $(el).find('.film-title').attr('data-jname'),
+                poster: $(el).find('.film-poster-img').attr('data-src'),
+                number: parseInt($(el).find('.number span').text())
+            });
+        });
+
+        $('#trending-home .swiper-slide').each((i, el) => {
+            data['spotlight'].push({
+                id: $(el).attr('data-id'),
+                slug: $(el).find('a').attr('href').split('/').pop(),
+                title: $(el).find('.film-title').text(),
+                original_title: $(el).find('.film-title').attr('data-jname'),
+                poster: $(el).find('.film-poster-img').attr('data-src'),
+                number: parseInt($(el).find('.number span').text())
+            });
+        });
+
+        $('#top-viewed-day ul li').each((i, el) => {
+            data['top10'].push({
+                id: parseInt($(el).find('.item-qtip').attr('data-id')),
+                slug: $(el).find('a').attr('href').split('/').pop(),
+                title: $(el).find('.film-name a').text(),
+                original_title: $(el).find('.film-name a').attr('data-jname'),
+                poster: $(el).find('.film-poster-img').attr('data-src'),
+                number: parseInt($(el).find('.film-number span').text()),
+                sub: parseInt($(el).find('.tick-sub').text()),
+                dub: parseInt($(el).find('.tick-dub').text()),
+                eps: parseInt($(el).find('.tick-eps').text()),
+            });
+        });
+
+        $('#main-content section:eq(0)').find('.film_list-wrap .flw-item').each((i, el) => {
+            data['latest'].push(getItem($(el)));
+        });
+
+        res.status(200).json(data);
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            error: 'Internal Error',
+            message: err,
+        });
+    }
 })
 
 app.get('/trending', async (req, res) => {
@@ -564,6 +625,42 @@ app.get('/episode/list/:id', async (req, res) => {
             message: err,
         });
     }
+})
+
+app.get('/qtip/:id', async (req, res) => {
+    const html = await ax.get(`/ajax/movie/qtip/${req.params.id}`,{
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+    });
+    const $ = cheerio.load(html.data);
+
+    let genres = [];
+
+    $('.pre-qtip-line:eq(4) a').each((i, el) => {
+        genres.push({
+            slug: $(el).attr('href').split('/').pop(),
+            name: $(el).text(),
+        })
+    })
+
+    const data = {
+        title: $('.pre-qtip-title').text(),
+        score: $('.pre-qtip-detail .pqd-li.mr-3').text(),
+        quality: $('.tick-quality').text(),
+        sub: parseInt($('.tick-sub').text()),
+        dub: parseInt($('.tick-dub').text()),
+        type: $('.badge-quality').text(),
+        description: $('.pre-qtip-description').text(),
+        details: {
+            japanese: $('.pre-qtip-line:eq(0) .stick-text').text(),
+            synonyms: $('.pre-qtip-line:eq(1) .stick-text').text(),
+            aired: new Date($('.pre-qtip-line:eq(2) .stick-text').text()),
+            status: $('.pre-qtip-line:eq(3) .stick-text').text(),
+            genres: genres,
+        },
+        slug: $('.pre-qtip-button a').attr('href').split('/').pop()
+    };
+
+    res.status(200).json(data);
 })
 
 app.listen(port, () => {
