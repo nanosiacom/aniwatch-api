@@ -1,28 +1,19 @@
-import cors from 'cors';
-import express from 'express';
+import express, { Router } from 'express';
+import serverless from 'serverless-http';
 import axios from 'axios';
-import {getArchiveItems, getItem, slugify} from "./utils.js";
-import cheerio from "cheerio";
+import * as cheerio from 'cheerio';
+import {getArchiveItems, getItem} from "./utils.js";
 
 const ax = axios.create({
     baseURL: 'https://aniwatch.to',
 })
-const port = process.env.PORT || 3000;
-const corsOptions = {
-    origin: '*',
-    credentials: true,
-    optionSuccessStatus: 200,
-    port: port,
-};
 
 const app = express();
+const router = Router();
 
-app.use(cors(corsOptions));
-app.use(express.json());
-
-app.get('/', (req, res) => {
-    res.status(200).json('WORKING');
-})
+router.get('/', (req, res) => {
+    res.send("WORK!")
+});
 
 app.get('/home', async (req, res) => {
     try {
@@ -663,6 +654,6 @@ app.get('/qtip/:id', async (req, res) => {
     res.status(200).json(data);
 })
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+app.use('/', router);
+
+export const handler = serverless(app);
