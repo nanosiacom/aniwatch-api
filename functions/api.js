@@ -706,7 +706,7 @@ app.get('/episode/sources/:sourceId', async (req, res) => {
 app.get('/episode/list/server/:episodeId', async (req, res) => {
     try {
         const response = await fetch(`${BASE_URL}/ajax/v2/episode/servers?episodeId=${req.params.episodeId}`, {method: "GET"});
-        const html = await response.text();
+        const html = await response.json();
 
         const $ = cheerio.load(html['html']);
         let data = [];
@@ -733,7 +733,7 @@ app.get('/episode/list/server/:episodeId', async (req, res) => {
 app.get('/episode/list/:id', async (req, res) => {
     try {
         const response = await fetch(`${BASE_URL}/ajax/v2/episode/list/${req.params.id}`, {method: "GET"});
-        const html = await response.text();
+        const html = await response.json();
 
         const $ = cheerio.load(html['html']);
         let data = [];
