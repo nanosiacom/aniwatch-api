@@ -614,7 +614,7 @@ app.get('/:slug', async (req, res) => {
 
         const statTick = $('.film-stats .tick');
         const details = $('.anisc-info');
-        const recommended = getArchiveItems(html.data);
+        const recommended = getArchiveItems(html);
 
         $('#main-sidebar section:eq(0) ul.ulclear li').each((i, el) => {
             related.push({
