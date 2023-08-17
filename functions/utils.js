@@ -43,5 +43,11 @@ export const getArchiveItems = (html) => {
         list.push(getItem($(el)));
     });
 
-    return list;
+    const data = {
+        per_page: parseInt(list.length),
+        results: list,
+        total_pages: parseInt($('ul.pagination li:last-child a').attr('href').split('=').pop())
+    };
+
+    return data;
 }
