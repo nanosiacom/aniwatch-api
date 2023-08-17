@@ -1,15 +1,11 @@
 import express, { Router } from 'express';
 import serverless from 'serverless-http';
-import axios from 'axios';
 import * as cheerio from 'cheerio';
 import {getArchiveItems, getItem} from "./utils.js";
 
-const ax = axios.create({
-    baseURL: 'https://aniwatch.to',
-})
-
 const app = express();
 const router = Router();
+const BASE_URL = "https://aniwatch.to";
 
 router.get('/', (req, res) => {
     res.send("WORK!")
@@ -17,8 +13,10 @@ router.get('/', (req, res) => {
 
 app.get('/home', async (req, res) => {
     try {
-        const html = await ax.get(`/home`);
-        const $ = cheerio.load(html.data);
+        const response = await fetch(`${BASE_URL}/home`, {method: "GET"})
+        const html = await response.text();
+        const $ = cheerio.load(html);
+
         const data = {
             trending: [],
             spotlight: [],
@@ -78,8 +76,10 @@ app.get('/home', async (req, res) => {
 
 app.get('/trending', async (req, res) => {
     try {
-        const html = await ax.get(`/home`);
-        const $ = cheerio.load(html.data);
+        const response = await fetch(`${BASE_URL}/home`, {method: "GET"})
+        const html = await response.text();
+        const $ = cheerio.load(html);
+
         const data = [];
 
         $('#trending-home .swiper-slide').each((i, el) => {
@@ -105,8 +105,10 @@ app.get('/trending', async (req, res) => {
 
 app.get('/top10', async (req, res) => {
     try {
-        const html = await ax.get(`/home`);
-        const $ = cheerio.load(html.data);
+        const response = await fetch(`${BASE_URL}/home`, {method: "GET"})
+        const html = await response.text();
+        const $ = cheerio.load(html);
+
         const data = [];
 
         $('#top-viewed-day ul li').each((i, el) => {
@@ -135,8 +137,10 @@ app.get('/top10', async (req, res) => {
 
 app.get('/spotlight', async (req, res) => {
     try {
-        const html = await ax.get(`/home`);
-        const $ = cheerio.load(html.data);
+        const response = await fetch(`${BASE_URL}/home`, {method: "GET"})
+        const html = await response.text();
+        const $ = cheerio.load(html);
+
         const data = [];
 
         $('#slider .swiper-slide').each((i, el) => {
@@ -172,8 +176,10 @@ app.get('/spotlight', async (req, res) => {
 
 app.get('/genres', async (req, res) => {
     try {
-        const html = await ax.get(`/home`);
-        const $ = cheerio.load(html.data);
+        const response = await fetch(`${BASE_URL}/home`, {method: "GET"})
+        const html = await response.text();
+        const $ = cheerio.load(html);
+
         const data = [];
 
         $('#sidebar_subs_genre ul.nav li.nav-item:not(.nav-more)').each((i, el) => {
@@ -197,8 +203,11 @@ app.get('/search', async (req, res) => {
     try {
         const keyword = req.query.keyword;
         const page = req.query.page ?? 1;
-        const html = await ax.get(`/search?keyword=${keyword}&page=${page}`);
-        const data = getArchiveItems(html.data);
+
+        const response = await fetch(`${BASE_URL}/search?keyword=${keyword}&page=${page}`, {method: "GET"})
+        const html = await response.text();
+
+        const data = getArchiveItems(html);
 
         res.status(200).json(data);
     } catch (err) {
@@ -213,8 +222,11 @@ app.get('/search', async (req, res) => {
 app.get('/movie', async (req, res) => {
     try {
         const page = req.query.page ?? 1;
-        const html = await ax.get(`/movie?page=${page}`);
-        const data = getArchiveItems(html.data);
+
+        const response = await fetch(`${BASE_URL}/movie?page=${page}`, {method: "GET"})
+        const html = await response.text();
+
+        const data = getArchiveItems(html);
 
         res.status(200).json(data);
     } catch (err) {
@@ -229,8 +241,11 @@ app.get('/movie', async (req, res) => {
 app.get('/top-airing', async (req, res) => {
     try {
         const page = req.query.page ?? 1;
-        const html = await ax.get(`/top-airing?page=${page}`);
-        const data = getArchiveItems(html.data);
+
+        const response = await fetch(`${BASE_URL}/top-airing?page=${page}`, {method: "GET"})
+        const html = await response.text();
+
+        const data = getArchiveItems(html);
 
         res.status(200).json(data);
     } catch (err) {
@@ -245,8 +260,11 @@ app.get('/top-airing', async (req, res) => {
 app.get('/most-popular', async (req, res) => {
     try {
         const page = req.query.page ?? 1;
-        const html = await ax.get(`/most-popular?page=${page}`);
-        const data = getArchiveItems(html.data);
+
+        const response = await fetch(`${BASE_URL}/most-popular?page=${page}`, {method: "GET"})
+        const html = await response.text();
+
+        const data = getArchiveItems(html);
 
         res.status(200).json(data);
     } catch (err) {
@@ -261,8 +279,11 @@ app.get('/most-popular', async (req, res) => {
 app.get('/most-favorite', async (req, res) => {
     try {
         const page = req.query.page ?? 1;
-        const html = await ax.get(`/most-favorite?page=${page}`);
-        const data = getArchiveItems(html.data);
+
+        const response = await fetch(`${BASE_URL}/most-favorite?page=${page}`, {method: "GET"})
+        const html = await response.text();
+
+        const data = getArchiveItems(html);
 
         res.status(200).json(data);
     } catch (err) {
@@ -277,8 +298,11 @@ app.get('/most-favorite', async (req, res) => {
 app.get('/completed', async (req, res) => {
     try {
         const page = req.query.page ?? 1;
-        const html = await ax.get(`/completed?page=${page}`);
-        const data = getArchiveItems(html.data);
+
+        const response = await fetch(`${BASE_URL}/completed?page=${page}`, {method: "GET"})
+        const html = await response.text();
+
+        const data = getArchiveItems(html);
 
         res.status(200).json(data);
     } catch (err) {
@@ -293,8 +317,11 @@ app.get('/completed', async (req, res) => {
 app.get('/recently-updated', async (req, res) => {
     try {
         const page = req.query.page ?? 1;
-        const html = await ax.get(`/recently-updated?page=${page}`);
-        const data = getArchiveItems(html.data);
+
+        const response = await fetch(`${BASE_URL}/recently-updated?page=${page}`, {method: "GET"})
+        const html = await response.text();
+
+        const data = getArchiveItems(html);
 
         res.status(200).json(data);
     } catch (err) {
@@ -309,8 +336,11 @@ app.get('/recently-updated', async (req, res) => {
 app.get('/recently-added', async (req, res) => {
     try {
         const page = req.query.page ?? 1;
-        const html = await ax.get(`/recently-added?page=${page}`);
-        const data = getArchiveItems(html.data);
+
+        const response = await fetch(`${BASE_URL}/recently-added?page=${page}`, {method: "GET"})
+        const html = await response.text();
+
+        const data = getArchiveItems(html);
 
         res.status(200).json(data);
     } catch (err) {
@@ -325,8 +355,11 @@ app.get('/recently-added', async (req, res) => {
 app.get('/top-upcoming', async (req, res) => {
     try {
         const page = req.query.page ?? 1;
-        const html = await ax.get(`/top-upcoming?page=${page}`);
-        const data = getArchiveItems(html.data);
+
+        const response = await fetch(`${BASE_URL}/top-upcoming?page=${page}`, {method: "GET"})
+        const html = await response.text();
+
+        const data = getArchiveItems(html);
 
         res.status(200).json(data);
     } catch (err) {
@@ -341,8 +374,11 @@ app.get('/top-upcoming', async (req, res) => {
 app.get('/subbed-anime', async (req, res) => {
     try {
         const page = req.query.page ?? 1;
-        const html = await ax.get(`/subbed-anime?page=${page}`);
-        const data = getArchiveItems(html.data);
+
+        const response = await fetch(`${BASE_URL}/subbed-anime?page=${page}`, {method: "GET"})
+        const html = await response.text();
+
+        const data = getArchiveItems(html);
 
         res.status(200).json(data);
     } catch (err) {
@@ -357,8 +393,11 @@ app.get('/subbed-anime', async (req, res) => {
 app.get('/dubbed-anime', async (req, res) => {
     try {
         const page = req.query.page ?? 1;
-        const html = await ax.get(`/dubbed-anime?page=${page}`);
-        const data = getArchiveItems(html.data);
+
+        const response = await fetch(`${BASE_URL}/dubbed-anime?page=${page}`, {method: "GET"})
+        const html = await response.text();
+
+        const data = getArchiveItems(html);
 
         res.status(200).json(data);
     } catch (err) {
@@ -373,8 +412,11 @@ app.get('/dubbed-anime', async (req, res) => {
 app.get('/tv', async (req, res) => {
     try {
         const page = req.query.page ?? 1;
-        const html = await ax.get(`/tv?page=${page}`);
-        const data = getArchiveItems(html.data);
+
+        const response = await fetch(`${BASE_URL}/tv?page=${page}`, {method: "GET"})
+        const html = await response.text();
+
+        const data = getArchiveItems(html);
 
         res.status(200).json(data);
     } catch (err) {
@@ -389,8 +431,11 @@ app.get('/tv', async (req, res) => {
 app.get('/ova', async (req, res) => {
     try {
         const page = req.query.page ?? 1;
-        const html = await ax.get(`/ova?page=${page}`);
-        const data = getArchiveItems(html.data);
+
+        const response = await fetch(`${BASE_URL}/ova?page=${page}`, {method: "GET"})
+        const html = await response.text();
+
+        const data = getArchiveItems(html);
 
         res.status(200).json(data);
     } catch (err) {
@@ -405,8 +450,11 @@ app.get('/ova', async (req, res) => {
 app.get('/ona', async (req, res) => {
     try {
         const page = req.query.page ?? 1;
-        const html = await ax.get(`/ona?page=${page}`);
-        const data = getArchiveItems(html.data);
+
+        const response = await fetch(`${BASE_URL}/ona?page=${page}`, {method: "GET"})
+        const html = await response.text();
+
+        const data = getArchiveItems(html);
 
         res.status(200).json(data);
     } catch (err) {
@@ -421,8 +469,11 @@ app.get('/ona', async (req, res) => {
 app.get('/special', async (req, res) => {
     try {
         const page = req.query.page ?? 1;
-        const html = await ax.get(`/special?page=${page}`);
-        const data = getArchiveItems(html.data);
+
+        const response = await fetch(`${BASE_URL}/special?page=${page}`, {method: "GET"})
+        const html = await response.text();
+
+        const data = getArchiveItems(html);
 
         res.status(200).json(data);
     } catch (err) {
@@ -437,8 +488,11 @@ app.get('/special', async (req, res) => {
 app.get('/az-list', async (req, res) => {
     try {
         const page = req.query.page ?? 1;
-        const html = await ax.get(`/az-list?page=${page}`);
-        const data = getArchiveItems(html.data);
+
+        const response = await fetch(`${BASE_URL}/az-list?page=${page}`, {method: "GET"})
+        const html = await response.text();
+
+        const data = getArchiveItems(html);
 
         res.status(200).json(data);
     } catch (err) {
@@ -454,8 +508,11 @@ app.get('/az-list/:path', async (req, res) => {
     try {
         const page = req.query.page ?? 1;
         const path = req.params.path;
-        const html = await ax.get(`/az-list/${path}?page=${page}`);
-        const data = getArchiveItems(html.data);
+
+        const response = await fetch(`${BASE_URL}/az-list/${path}?page=${page}`, {method: "GET"})
+        const html = await response.text();
+
+        const data = getArchiveItems(html);
 
         res.status(200).json(data);
     } catch (err) {
@@ -469,8 +526,10 @@ app.get('/az-list/:path', async (req, res) => {
 
 app.get('/:slug', async (req, res) => {
     try {
-        const html = await ax.get(`/${req.params.slug}`);
-        const $ = cheerio.load(html.data);
+        const response = await fetch(`${BASE_URL}/${req.params.slug}`, {method: "GET"});
+        const html = await response.text();
+
+        const $ = cheerio.load(html);
 
         let genres = [];
         let studios = [];
@@ -555,9 +614,10 @@ app.get('/:slug', async (req, res) => {
 
 app.get('/episode/sources/:sourceId', async (req, res) => {
     try {
-        const html = await ax.get(`/ajax/v2/episode/sources?id=${req.params.sourceId}`);
+        const response = await fetch(`${BASE_URL}/ajax/v2/episode/sources?id=${req.params.sourceId}`, {method: "GET"});
+        const html = await response.text();
 
-        res.status(200).json(html.data);
+        res.status(200).json(html);
     } catch (err) {
         res.status(500).json({
             status: 500,
@@ -569,8 +629,10 @@ app.get('/episode/sources/:sourceId', async (req, res) => {
 
 app.get('/episode/list/server/:episodeId', async (req, res) => {
     try {
-        const html = await ax.get(`/ajax/v2/episode/servers?episodeId=${req.params.episodeId}`);
-        const $ = cheerio.load(html.data['html']);
+        const response = await fetch(`${BASE_URL}/ajax/v2/episode/servers?episodeId=${req.params.episodeId}`, {method: "GET"});
+        const html = await response.text();
+
+        const $ = cheerio.load(html['html']);
         let data = [];
 
         $('.server-item').each((i, el) => {
@@ -594,8 +656,10 @@ app.get('/episode/list/server/:episodeId', async (req, res) => {
 
 app.get('/episode/list/:id', async (req, res) => {
     try {
-        const html = await ax.get(`/ajax/v2/episode/list/${req.params.id}`);
-        const $ = cheerio.load(html.data['html']);
+        const response = await fetch(`${BASE_URL}/ajax/v2/episode/list/${req.params.id}`, {method: "GET"});
+        const html = await response.text();
+
+        const $ = cheerio.load(html['html']);
         let data = [];
 
         $('.ss-list .ep-item').each((i, el) => {
@@ -619,10 +683,12 @@ app.get('/episode/list/:id', async (req, res) => {
 })
 
 app.get('/qtip/:id', async (req, res) => {
-    const html = await ax.get(`/ajax/movie/qtip/${req.params.id}`,{
+    const response = await fetch(`${BASE_URL}/ajax/movie/qtip/${req.params.id}`, {
+        method: "GET",
         headers: {'X-Requested-With': 'XMLHttpRequest'},
-    });
-    const $ = cheerio.load(html.data);
+    })
+    const html = await response.text();
+    const $ = cheerio.load(html);
 
     let genres = [];
 
