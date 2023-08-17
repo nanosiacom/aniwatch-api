@@ -716,7 +716,7 @@ app.get('/episode/list/server/:episodeId', async (req, res) => {
                 type: $(el).attr('data-type'),
                 id: parseInt($(el).attr('data-id')),
                 server_id: parseInt($(el).attr('data-server-id')),
-                name: $(el).filter('a').text()
+                name: $(el).find('a').text()
             })
         })
 
