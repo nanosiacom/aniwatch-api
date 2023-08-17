@@ -35,14 +35,24 @@ app.get('/home', async (req, res) => {
             });
         });
 
-        $('#trending-home .swiper-slide').each((i, el) => {
+        $('#slider .swiper-slide').each((i, el) => {
+            const detail = $(el).find('div.sc-detail');
+            const href = $(el).find('div.desi-buttons .btn-secondary').attr('href');
+            const splitHref = href.split('-');
+
             data['spotlight'].push({
-                id: $(el).attr('data-id'),
-                slug: $(el).find('a').attr('href').split('/').pop(),
-                title: $(el).find('.film-title').text(),
-                original_title: $(el).find('.film-title').attr('data-jname'),
-                poster: $(el).find('.film-poster-img').attr('data-src'),
-                number: parseInt($(el).find('.number span').text())
+                id: parseInt(splitHref.pop()),
+                slug: href.split('/').pop(),
+                title: $(el).find('div.desi-head-title').text(),
+                original_title: $(el).find('div.desi-head-title').attr('data-jname'),
+                backdrop: $(el).find('.film-poster-img').attr('data-src'),
+                type: detail.find('.scd-item:eq(0)').text().trim(),
+                runtime: parseInt(detail.find('.scd-item:eq(1)').text().trim()),
+                release_date: new Date(detail.find('.scd-item:eq(2)').text().trim()),
+                quality: detail.find('.scd-item:eq(3)').text().trim(),
+                sub: parseInt(detail.find('.scd-item:eq(4) .tick .tick-sub').text().trim()),
+                dub: parseInt(detail.find('.scd-item:eq(4) .tick .tick-dub').text().trim()),
+                eps: parseInt(detail.find('.scd-item:eq(4) .tick .tick-eps').text().trim()),
             });
         });
 
