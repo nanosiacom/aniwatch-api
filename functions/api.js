@@ -72,6 +72,7 @@ app.get('/home', async (req, res) => {
                 sub: parseInt($(el).find('.tick-sub').text()),
                 dub: parseInt($(el).find('.tick-dub').text()),
                 eps: parseInt($(el).find('.tick-eps').text()),
+                type: parseInt($(el).find('span.fdi-item').text()),
             });
         })
 
@@ -86,6 +87,7 @@ app.get('/home', async (req, res) => {
                 sub: parseInt($(el).find('.tick-sub').text()),
                 dub: parseInt($(el).find('.tick-dub').text()),
                 eps: parseInt($(el).find('.tick-eps').text()),
+                type: parseInt($(el).find('span.fdi-item').text()),
             });
         })
 
@@ -100,6 +102,7 @@ app.get('/home', async (req, res) => {
                 sub: parseInt($(el).find('.tick-sub').text()),
                 dub: parseInt($(el).find('.tick-dub').text()),
                 eps: parseInt($(el).find('.tick-eps').text()),
+                type: parseInt($(el).find('span.fdi-item').text()),
             });
         })
 
@@ -114,6 +117,7 @@ app.get('/home', async (req, res) => {
                 sub: parseInt($(el).find('.tick-sub').text()),
                 dub: parseInt($(el).find('.tick-dub').text()),
                 eps: parseInt($(el).find('.tick-eps').text()),
+                type: parseInt($(el).find('span.fdi-item').text()),
             });
         })
 
