@@ -21,7 +21,11 @@ app.get('/home', async (req, res) => {
             trending: [],
             spotlight: [],
             top10: [],
-            latest: []
+            latest: [],
+            top_airings: [],
+            most_populars: [],
+            most_favorites: [],
+            latest_completeds: [],
         };
 
         $('#trending-home .swiper-slide').each((i, el) => {
@@ -56,6 +60,62 @@ app.get('/home', async (req, res) => {
                 eps: parseInt(detail.find('.scd-item:eq(4) .tick .tick-eps').text().trim()),
             });
         });
+
+        $('#anime-featured .anif-blocks .row .col-xl-3:eq(0) ul.ulclear li').each((i, el) => {
+            data['top_airings'].push({
+                id: parseInt($(el).find('.item-qtip').attr('data-id')),
+                slug: $(el).find('a').attr('href').split('/').pop(),
+                title: $(el).find('.film-name a').text(),
+                original_title: $(el).find('.film-name a').attr('data-jname'),
+                poster: $(el).find('.film-poster-img').attr('data-src'),
+                number: parseInt($(el).find('.film-number span').text()),
+                sub: parseInt($(el).find('.tick-sub').text()),
+                dub: parseInt($(el).find('.tick-dub').text()),
+                eps: parseInt($(el).find('.tick-eps').text()),
+            });
+        })
+
+        $('#anime-featured .anif-blocks .row .col-xl-3:eq(1) ul.ulclear li').each((i, el) => {
+            data['most_populars'].push({
+                id: parseInt($(el).find('.item-qtip').attr('data-id')),
+                slug: $(el).find('a').attr('href').split('/').pop(),
+                title: $(el).find('.film-name a').text(),
+                original_title: $(el).find('.film-name a').attr('data-jname'),
+                poster: $(el).find('.film-poster-img').attr('data-src'),
+                number: parseInt($(el).find('.film-number span').text()),
+                sub: parseInt($(el).find('.tick-sub').text()),
+                dub: parseInt($(el).find('.tick-dub').text()),
+                eps: parseInt($(el).find('.tick-eps').text()),
+            });
+        })
+
+        $('#anime-featured .anif-blocks .row .col-xl-3:eq(2) ul.ulclear li').each((i, el) => {
+            data['most_favorites'].push({
+                id: parseInt($(el).find('.item-qtip').attr('data-id')),
+                slug: $(el).find('a').attr('href').split('/').pop(),
+                title: $(el).find('.film-name a').text(),
+                original_title: $(el).find('.film-name a').attr('data-jname'),
+                poster: $(el).find('.film-poster-img').attr('data-src'),
+                number: parseInt($(el).find('.film-number span').text()),
+                sub: parseInt($(el).find('.tick-sub').text()),
+                dub: parseInt($(el).find('.tick-dub').text()),
+                eps: parseInt($(el).find('.tick-eps').text()),
+            });
+        })
+
+        $('#anime-featured .anif-blocks .row .col-xl-3:eq(3) ul.ulclear li').each((i, el) => {
+            data['latest_completeds'].push({
+                id: parseInt($(el).find('.item-qtip').attr('data-id')),
+                slug: $(el).find('a').attr('href').split('/').pop(),
+                title: $(el).find('.film-name a').text(),
+                original_title: $(el).find('.film-name a').attr('data-jname'),
+                poster: $(el).find('.film-poster-img').attr('data-src'),
+                number: parseInt($(el).find('.film-number span').text()),
+                sub: parseInt($(el).find('.tick-sub').text()),
+                dub: parseInt($(el).find('.tick-dub').text()),
+                eps: parseInt($(el).find('.tick-eps').text()),
+            });
+        })
 
         $('#top-viewed-day ul li').each((i, el) => {
             data['top10'].push({
