@@ -712,7 +712,7 @@ app.get('/qtip/:id', async (req, res) => {
     })
 
     const data = {
-        id: $('.dr-tip-fav').attr('id').split('-').pop(),
+        id: parseInt($('.dr-tip-fav').attr('id').split('-').pop()),
         title: $('.pre-qtip-title').text(),
         score: $('.pre-qtip-detail .pqd-li.mr-3').text(),
         quality: $('.tick-quality').text(),
