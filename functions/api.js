@@ -674,7 +674,7 @@ app.get('/:slug', async (req, res) => {
                 studios: studios,
                 producers: producers,
             },
-            recommended: recommended,
+            recommended: recommended.results,
             related: related,
         };
 
