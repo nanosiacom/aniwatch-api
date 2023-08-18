@@ -295,6 +295,40 @@ app.get('/search', async (req, res) => {
     }
 })
 
+app.get('/search/suggest', async (req, res) => {
+    try {
+        const keyword = req.query.keyword;
+        const page = req.query.page ?? 1;
+
+        const response = await fetch(`${BASE_URL}/ajax/search/suggest?keyword=${keyword}&page=${page}`, {method: "GET"})
+        const html = await response.json();
+
+        const $ = cheerio.load(html['html']);
+
+        const data = [];
+
+        $('.nav-item').each((i, el) => {
+            const t = $(el).find(".film-infor").html();
+
+            data.push({
+                slug: $(el).attr('href').split('?').shift().split('/').pop(),
+                id: parseInt($(el).attr('href').split('?').shift().trimStart('/').split('-').pop()),
+                poster: $(el).find('.film-poster img').attr('data-src'),
+                title: $(el).find('.film-name').text(),
+                original_title: $(el).find('.film-name').attr('data-jname')
+            })
+        })
+
+        res.status(200).json(data);
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            error: 'Internal Error',
+            message: err,
+        });
+    }
+})
+
 app.get('/movie', async (req, res) => {
     try {
         const page = req.query.page ?? 1;
