@@ -21,6 +21,7 @@ export const getItem = (item) => {
         sub: parseInt(item.find('.tick-sub').text()),
         dub: parseInt(item.find('.tick-dub').text()),
         eps: parseInt(item.find('.tick-eps').text()),
+        rate: item.find('.tick-rate').text(),
     }
 }
 

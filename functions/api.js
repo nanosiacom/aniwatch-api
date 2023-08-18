@@ -659,6 +659,7 @@ app.get('/:slug', async (req, res) => {
             quality: statTick.find('.tick-quality').text(),
             sub: parseInt(statTick.find('.tick-sub').text()),
             dub: parseInt(statTick.find('.tick-dub').text()),
+            rate: $('.anisc-poster .film-poster').find('.tick-rate').text(),
             type: statTick.find('.item').first().text(),
             runtime: parseInt(statTick.find('.item').last().text()),
             description: $('.film-description .text').text().trim(),
