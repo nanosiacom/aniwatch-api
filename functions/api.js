@@ -277,10 +277,8 @@ app.get('/genres', async (req, res) => {
 
 app.get('/filter', async (req, res) => {
     try {
-        const keyword = req.query.keyword;
-        const page = req.query.page ?? 1;
-
-        const response = await fetch(`${BASE_URL}/filter?${req.query}`, {method: "GET"})
+        const query = new URLSearchParams(req.query).toString();
+        const response = await fetch(`${BASE_URL}/filter?${query}`, {method: "GET"})
         const html = await response.text();
 
         const data = getArchiveItems(html);
