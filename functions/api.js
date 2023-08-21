@@ -275,6 +275,26 @@ app.get('/genres', async (req, res) => {
     }
 })
 
+app.get('/filter', async (req, res) => {
+    try {
+        const keyword = req.query.keyword;
+        const page = req.query.page ?? 1;
+
+        const response = await fetch(`${BASE_URL}/filter?${req.query}`, {method: "GET"})
+        const html = await response.text();
+
+        const data = getArchiveItems(html);
+
+        res.status(200).json(data);
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            error: 'Internal Error',
+            message: err,
+        });
+    }
+})
+
 app.get('/search', async (req, res) => {
     try {
         const keyword = req.query.keyword;
