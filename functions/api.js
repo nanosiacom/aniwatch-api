@@ -149,6 +149,25 @@ app.get('/home', async (req, res) => {
     }
 })
 
+app.get('/genre/:path', async (req, res) => {
+    try {
+        const page = req.query.page ?? 1;
+        const path = req.params.path;
+
+        const response = await fetch(`${BASE_URL}/genre/${path}?page=${page}`, {method: "GET"})
+        const html = await response.text();
+        const data = getArchiveItems(html);
+
+        res.status(200).json(data);
+    } catch (err) {
+        res.status(500).json({
+            status: 500,
+            error: 'Internal Error',
+            message: err,
+        });
+    }
+})
+
 app.get('/trending', async (req, res) => {
     try {
         const response = await fetch(`${BASE_URL}/home`, {method: "GET"})
